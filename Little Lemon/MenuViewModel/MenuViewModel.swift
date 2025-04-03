@@ -34,11 +34,9 @@ class MenuViewModel: ObservableObject {
         
         switch selectedSortOption {
         case .mostPopular:
-            // Since we don't track popularity anymore, we'll return items as is
-            break
+            filteredItems.sort { $0.orderCount > $1.orderCount }
         case .price:
-            // Since we don't track price anymore, we'll sort by title
-            filteredItems.sort { $0.title < $1.title }
+            filteredItems.sort { $0.price < $1.price }
         case .alphabetical:
             filteredItems.sort { $0.title < $1.title }
         }
@@ -67,7 +65,7 @@ class MenuViewModel: ObservableObject {
         objectWillChange.send()
     }
     
-    // Helper function to get ingredients for a menu item
+
     func getIngredients(for item: MenuItem) -> [String] {
         return item.ingredients.map { $0.rawValue }
     }

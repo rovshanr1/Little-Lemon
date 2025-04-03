@@ -20,12 +20,30 @@ struct MenuItemDetails: View {
                     .clipped()
                 
                 VStack(alignment: .leading, spacing: 16) {
-                    Text(menuItem.title)
-                        .font(.title)
-                        .bold()
+                    HStack {
+                        Text(menuItem.title)
+                            .font(.title)
+                            .bold()
+                        Spacer()
+                        Text("$\(String(format: "%.2f", menuItem.price))")
+                            .font(.title2)
+                            .foregroundColor(.green)
+                    }
                     
-                    Text("Malzemeler:")
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Popularity:")
+                            .font(.headline)
+                        HStack(spacing: 4) {
+                            Image(systemName: "star.fill")
+                                .foregroundColor(.yellow)
+                            Text("\(menuItem.orderCount) order")
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    
+                    Text("Ingredient:")
                         .font(.headline)
+                        .padding(.top, 8)
                     
                     ForEach(menuItem.ingredients, id: \.self) { ingredient in
                         Text("• \(ingredient.rawValue)")
