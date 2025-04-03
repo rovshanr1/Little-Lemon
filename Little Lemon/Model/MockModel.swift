@@ -7,33 +7,119 @@
 
 import Foundation
 
-struct MenuItem: Identifiable{
+
+enum SortOption: String, CaseIterable {
+    case mostPopular = "Most Popular"
+    case price = "Price $-$$$"
+    case alphabetical = "A-Z"
+}
+
+struct MenuItem: Identifiable {
     let id = UUID()
-    let name: String
-    let category: String
-    let price: Double
+    let title: String
+    let ingredients: [Ingredient]
     let imageName: String
 }
 
-
 let mockMenuCategories: [String: [MenuItem]] = [
-        "Food": [
-            MenuItem(name: "Margherita Pizza", category: "Food", price: 12.99, imageName: "pizza"),
-            MenuItem(name: "Caesar Salad", category: "Food", price: 9.99, imageName: "salad"),
-            MenuItem(name: "Grilled Salmon", category: "Food", price: 18.99, imageName: "salmon"),
-            MenuItem(name: "Spaghetti Carbonara", category: "Food", price: 14.99, imageName: "carbonara")
-        ],
-        "Drink": [
-            MenuItem(name: "Lemonade", category: "Drink", price: 4.99, imageName: "lemonade"),
-            MenuItem(name: "Espresso", category: "Drink", price: 3.99, imageName: "espresso"),
-            MenuItem(name: "Mojito", category: "Drink", price: 7.49, imageName: "mojito"),
-            MenuItem(name: "Blue Lagoon Cocktail", category: "Drink", price: 10.49, imageName: "lagon")
-        ],
-        "Dessert": [
-            MenuItem(name: "Cheesecake", category: "Dessert", price: 6.99, imageName: "cheesecake"),
-            MenuItem(name: "Brownie", category: "Dessert", price: 5.99, imageName: "brownie"),
-            MenuItem(name: "Chocolate Raspberry", category: "Dessert", price: 6.49, imageName: "chocolateraspberry"),
-            MenuItem(name: "Caramel Cake", category: "Desert", price: 7, imageName: "caramelcake")
-        ]
+    "Food": [
+        // Italian Cuisine
+        MenuItem(title: "Margherita Pizza", 
+                ingredients: [.tomatoSauce, .mozzarella, .basil],
+                imageName: "pizza"),
+        MenuItem(title: "Spaghetti Carbonara", 
+                ingredients: [.pasta, .eggs, .pecorino, .blackPepper, .guanciale],
+                imageName: "carbonara"),
+        MenuItem(title: "Lasagna", 
+                ingredients: [.pasta, .tomatoSauce, .mozzarella, .beef, .parmesan],
+                imageName: "lasagna"),
+        MenuItem(title: "Risotto Mushroom", 
+                ingredients: [.rice, .mushrooms, .parmesan, .butter, .herbs],
+                imageName: "risotto"),
+        
+        // Seafood
+        MenuItem(title: "Grilled Salmon", 
+                ingredients: [.salmon, .lemon, .herbs, .oliveOil],
+                imageName: "salmon"),
+        MenuItem(title: "Shrimp Scampi", 
+                ingredients: [.shrimp, .garlic, .butter, .whiteWine, .pasta],
+                imageName: "shrimp"),
+        MenuItem(title: "Fish & Chips", 
+                ingredients: [.fish, .flour, .potatoes, .herbs],
+                imageName: "fish"),
+        
+        // Salads & Light Meals
+        MenuItem(title: "Caesar Salad", 
+                ingredients: [.lettuce, .croutons, .parmesan, .caesarDressing],
+                imageName: "caesar"),
+        MenuItem(title: "Greek Salad", 
+                ingredients: [.cucumber, .tomatoes, .olives, .feta, .oliveOil],
+                imageName: "greek"),
+        MenuItem(title: "Quinoa Bowl", 
+                ingredients: [.quinoa, .avocado, .spinach, .chickpeas],
+                imageName: "quinoa"),
+        
+        // Asian Fusion
+        MenuItem(title: "Chicken Teriyaki", 
+                ingredients: [.chicken, .soySauce, .rice, .vegetables],
+                imageName: "teriyaki"),
+        MenuItem(title: "Pad Thai", 
+                ingredients: [.noodles, .shrimp, .peanuts, .eggs, .beanSprouts],
+                imageName: "padthai")
+    ],
+    
+    "Drink": [
+        // Coffee & Tea
+        MenuItem(title: "Espresso", 
+                ingredients: [.coffeeBeans, .water],
+                imageName: "espresso"),
+        MenuItem(title: "Cappuccino", 
+                ingredients: [.coffeeBeans, .milk, .water],
+                imageName: "cappuccino"),
+        MenuItem(title: "Green Tea Latte", 
+                ingredients: [.greenTea, .milk, .honey],
+                imageName: "greentea"),
+        
+        // Refreshing Drinks
+        MenuItem(title: "Lemonade", 
+                ingredients: [.water, .sugar, .lemon],
+                imageName: "lemonade"),
+        MenuItem(title: "Iced Tea", 
+                ingredients: [.tea, .water, .lemon, .mint],
+                imageName: "icedtea"),
+        
+        // Cocktails
+        MenuItem(title: "Mojito", 
+                ingredients: [.rum, .mint, .sugar, .water, .lemon],
+                imageName: "mojito"),
+        MenuItem(title: "Blue Lagoon", 
+                ingredients: [.vodka, .blueCuracao, .lemon, .water],
+                imageName: "bluelagoon"),
+        MenuItem(title: "Margarita", 
+                ingredients: [.tequila, .lemon, .sugar, .salt],
+                imageName: "margarita")
+    ],
+    
+    "Dessert": [
+        MenuItem(title: "Chocolate Brownie", 
+                ingredients: [.chocolate, .flour, .eggs, .butter, .sugar, .vanilla],
+                imageName: "brownie"),
+        MenuItem(title: "Caramel Cake", 
+                ingredients: [.flour, .eggs, .butter, .sugar, .honey, .cream, .vanilla],
+                imageName: "caramelcake"),
+        MenuItem(title: "Classic Cheesecake", 
+                ingredients: [.cream, .eggs, .sugar, .vanilla, .graham, .butter],
+                imageName: "cheesecake"),
+        MenuItem(title: "Chocolate Raspberry Delight", 
+                ingredients: [.chocolate, .cream, .eggs, .sugar, .flour, .vanilla],
+                imageName: "chocolateraspberry")
     ]
+]
+
+
+let testMenuItem = MenuItem(
+    title: "Margherita Pizza",
+    ingredients: [.tomatoSauce, .mozzarella, .basil],
+    imageName: "pizza"
+)
 

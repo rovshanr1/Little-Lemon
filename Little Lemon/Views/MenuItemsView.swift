@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MenuItemsView: View {
     @ObservedObject var viewModel: MenuViewModel
+    @State private var showingOptions = false
     
     let columns = [
         GridItem(.flexible(), spacing: 16),
@@ -17,48 +18,75 @@ struct MenuItemsView: View {
     
     let categoryOrder: [String] = ["Food", "Drink", "Dessert"]
     
+    private var sortedCategories: [String] {
+        viewModel.getAllCategories().sorted { first, second in
+            let firstIndex = categoryOrder.firstIndex(of: first) ?? 0
+            let secondIndex = categoryOrder.firstIndex(of: second) ?? 0
+            return firstIndex < secondIndex
+        }
+    }
+    
+    private func menuItemView(for item: MenuItem) -> some View {
+        NavigationLink(destination: MenuItemDetails(menuItem: item)) {
+            VStack(spacing: 8) {
+                Image(item.imageName)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(height: 120)
+                    .clipped()
+                
+                VStack(spacing: 4) {
+                    Text(item.title)
+                        .font(.headline)
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(.primary)
+                }
+                .padding(.horizontal, 8)
+                .padding(.bottom, 8)
+            }
+            .background(Color(.systemBackground))
+        }
+    }
+    
+    private func categoryView(for category: String) -> some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text(category)
+                .font(.title2)
+                .bold()
+                .padding(.leading, 20)
+            
+            LazyVGrid(columns: columns, spacing: 16) {
+                ForEach(viewModel.getMenuItems(for: category)) { item in
+                    menuItemView(for: item)
+                }
+            }
+            .padding(.horizontal)
+        }
+    }
+    
     var body: some View {
-        ScrollView {
-            VStack(spacing: 24) {
-                ForEach(viewModel.getAllCategories().sorted{
-                    categoryOrder.firstIndex(of: $0) ?? 0 < categoryOrder.firstIndex(of: $1) ?? 0
-                }, id: \.self) { category in
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text(category)
-                            .font(.title2)
-                            .bold()
-                            .padding(.leading, 20)
-                        
-                        LazyVGrid(columns: columns, spacing: 16) {
-                            ForEach(viewModel.getMenuItems(for: category)) { item in
-                                VStack(spacing: 8) {
-                                    Image(item.imageName)
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(height: 120)
-                                        .clipped()
-                                    
-                                    VStack(spacing: 4) {
-                                        Text(item.name)
-                                            .font(.headline)
-                                            .multilineTextAlignment(.center)
-                                        
-                                        Text(String(format: "$%.2f", item.price))
-                                            .font(.subheadline)
-                                            .foregroundStyle(.secondary)
-                                    }
-                                    .padding(.horizontal, 8)
-                                    .padding(.bottom, 8)
-                                }
-                                .background(Color(.systemBackground))
-                                
-                            }
-                        }
-                        .padding(.horizontal)
+        NavigationView {
+            ScrollView {
+                VStack(spacing: 24) {
+                    ForEach(sortedCategories, id: \.self) { category in
+                        categoryView(for: category)
+                    }
+                }
+                .padding(.vertical)
+            }
+            .navigationTitle("Little Lemon Menu")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showingOptions = true
+                    } label: {
+                        Image(systemName: "slider.horizontal.3")
                     }
                 }
             }
-            .padding(.vertical)
+        }
+        .sheet(isPresented: $showingOptions) {
+            MenuItemsOptionView(viewModel: viewModel)
         }
     }
 }
