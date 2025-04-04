@@ -8,7 +8,10 @@
 import Foundation
 
 class MenuViewModel: ObservableObject {
-    @Published var menuCategories: [String: [MenuItem]] = mockMenuCategories
+    @Published var foodMenuItems: [MenuItem] = mockMenuCategories[MenuCategory.food.rawValue] ?? []
+    @Published var drinkMenuItems: [MenuItem] = mockMenuCategories[MenuCategory.drink.rawValue] ?? []
+    @Published var dessertMenuItems: [MenuItem] = mockMenuCategories[MenuCategory.dessert.rawValue] ?? []
+    
     @Published var selectedCategories: Set<MenuCategory> = Set(MenuCategory.allCases)
     @Published var selectedSortOption: SortOption = .mostPopular
     @Published var categoryFilters: [String: Bool] = ["Food": true, "Drink": true, "Dessert": true]
@@ -16,17 +19,22 @@ class MenuViewModel: ObservableObject {
     @Published var maxPrice: Double = 50
     
     func getMenuItems(for category: String) -> [MenuItem] {
-        let items = menuCategories[category] ?? []
+        let items: [MenuItem]
+        switch category {
+        case MenuCategory.food.rawValue:
+            items = foodMenuItems
+        case MenuCategory.drink.rawValue:
+            items = drinkMenuItems
+        case MenuCategory.dessert.rawValue:
+            items = dessertMenuItems
+        default:
+            items = []
+        }
         return filterAndSortItems(items)
     }
     
     func getAllCategories() -> [String] {
-        return Array(menuCategories.keys).filter { category in
-            if let menuCategory = MenuCategory(rawValue: category) {
-                return selectedCategories.contains(menuCategory)
-            }
-            return false
-        }
+        return selectedCategories.map { $0.rawValue }
     }
     
     private func filterAndSortItems(_ items: [MenuItem]) -> [MenuItem] {
@@ -65,7 +73,6 @@ class MenuViewModel: ObservableObject {
         objectWillChange.send()
     }
     
-
     func getIngredients(for item: MenuItem) -> [String] {
         return item.ingredients.map { $0.rawValue }
     }
